@@ -33,8 +33,5 @@ func main() {
 		}
 	}
 
-	fmt.Println(polymer)
 	fmt.Println(len(polymer))
-	// 21522 is too high
-	// 9298 is too high
 }

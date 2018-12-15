@@ -24,21 +24,29 @@ func main() {
 		}
 	}
 
-	shortestPolymer := len(polymer)
+	lenPolymers := make(chan int, 26)
 	for letter := 0; letter < 26; letter++ {
-		improvedPolymer := strings.Replace(polymer, string('A'+letter), "", -1)
-		improvedPolymer = strings.Replace(improvedPolymer, string('a'+letter), "", -1)
-		i := 0
-		for i < len(improvedPolymer)-1 {
-			if improvedPolymer[i]+32 == improvedPolymer[i+1] || improvedPolymer[i]-32 == improvedPolymer[i+1] {
-				improvedPolymer = improvedPolymer[:i] + improvedPolymer[i+2:]
-				i = 0
-			} else {
-				i++
+		go func(letter int, polymer string, lenPolymers chan<- int) {
+			producedPolymer := strings.Replace(polymer, string('A'+letter), "", -1)
+			producedPolymer = strings.Replace(producedPolymer, string('a'+letter), "", -1)
+			i := 0
+			for i < len(producedPolymer)-1 {
+				if producedPolymer[i]+32 == producedPolymer[i+1] || producedPolymer[i]-32 == producedPolymer[i+1] {
+					producedPolymer = producedPolymer[:i] + producedPolymer[i+2:]
+					i = 0
+				} else {
+					i++
+				}
 			}
-		}
-		if shortestPolymer > len(improvedPolymer) {
-			shortestPolymer = len(improvedPolymer)
+			lenPolymers <- len(producedPolymer)
+		}(letter, polymer, lenPolymers)
+	}
+
+	shortestPolymer := len(polymer)
+	for i := 0; i < 26; i++ {
+		lenPolymer := <-lenPolymers
+		if shortestPolymer > lenPolymer {
+			shortestPolymer = lenPolymer
 		}
 	}
 	fmt.Println(shortestPolymer)
