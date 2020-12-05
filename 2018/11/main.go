@@ -3,6 +3,10 @@ package main
 import "fmt"
 
 func main() {
+	partOne()
+}
+
+func partOne() {
 	serial := 7803
 	cells := make([][]int, 300)
 	for i := range cells {

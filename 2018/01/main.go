@@ -8,7 +8,31 @@ import (
 )
 
 func main() {
-	inFile, err := os.Open("01.txt")
+	partTwo()
+}
+
+func partOne() {
+	inFile, err := os.Open("input.txt")
+	if err != nil {
+		os.Exit(1)
+	}
+	defer inFile.Close()
+	scanner := bufio.NewScanner(inFile)
+	scanner.Split(bufio.ScanLines)
+
+	freq := 0
+	for scanner.Scan() {
+		i, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			os.Exit(1)
+		}
+		freq += i
+	}
+	fmt.Println(freq)
+}
+
+func partTwo() {
+	inFile, err := os.Open("input.txt")
 	if err != nil {
 		os.Exit(1)
 	}
